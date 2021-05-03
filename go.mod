@@ -1,3 +1,3 @@
-module github.com/mileusna/viber
+module github.com/dertarr/viber
 
-go 1.14
+go 1.16
