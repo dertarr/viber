@@ -52,6 +52,7 @@ type Viber struct {
 	Delivered           func(v *Viber, userID string, token uint64, t time.Time)
 	Seen                func(v *Viber, userID string, token uint64, t time.Time)
 	Failed              func(v *Viber, userID string, token uint64, descr string, t time.Time)
+	Webhook             func(v *Viber, token uint64, t time.Time)
 
 	// client for sending messages
 	client *http.Client
@@ -144,6 +145,11 @@ func (v *Viber) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "failed":
 		if v.Failed != nil {
 			go v.Failed(v, e.UserID, e.MessageToken, e.Descr, e.Timestamp.Time)
+		}
+
+	case "webhook":
+		if v.Webhook != nil {
+			go v.Webhook(v, e.MessageToken, e.Timestamp.Time)
 		}
 
 	case "message":
